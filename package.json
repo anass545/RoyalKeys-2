@@ -1,0 +1,25 @@
+
+{
+  "name": "royalkeys-marketplace",
+  "version": "1.0.0",
+  "description": "A high-end digital marketplace for software keys and subscriptions.",
+  "main": "index.tsx",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/user/royalkeys.git"
+  },
+  "keywords": [
+    "marketplace",
+    "react",
+    "tailwind",
+    "gemini-ai",
+    "ecommerce"
+  ],
+  "author": "RoyalKeys Team",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "@google/genai": "^1.42.0"
+  }
+}
