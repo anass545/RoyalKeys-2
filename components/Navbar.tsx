@@ -1,16 +1,15 @@
 
 import React, { useState } from 'react';
-import { CategoryType, User } from '../types.ts';
+import { CategoryType } from '../types.ts';
 
 interface NavbarProps {
   onCategoryClick: (category: CategoryType) => void;
   onHomeClick: () => void;
   onDashboardClick: () => void;
   onSearch: (term: string) => void;
-  user: User;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboardClick, onSearch, user }) => {
+const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboardClick, onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -24,16 +23,59 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
     <header className="sticky top-0 z-50 bg-[#04051a]/95 backdrop-blur-sm border-b border-gray-800">
       <div className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2 cursor-pointer group" onClick={onHomeClick}>
-          <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center font-bold text-[#04051a] group-hover:rotate-12 transition-transform shadow-lg shadow-amber-500/20">RK</div>
+          <div className="relative w-10 h-10 group-hover:scale-110 transition-transform duration-300">
+            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(84,255,38,0.5)]">
+              <defs>
+                <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#54FF26" />
+                  <stop offset="50%" stopColor="#22d3ee" />
+                  <stop offset="100%" stopColor="#54FF26" />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <path
+                d="M50 5 L93.3 30 V80 L50 105 L6.7 80 V30 Z"
+                fill="none"
+                stroke="url(#logo-gradient)"
+                strokeWidth="3"
+                className="animate-[spin_8s_linear_infinite]"
+              />
+              <path
+                d="M50 20 L75 35 V65 L50 80 L25 65 V35 Z"
+                fill="rgba(84,255,38,0.1)"
+                stroke="#54FF26"
+                strokeWidth="2"
+              />
+              <text
+                x="50"
+                y="62"
+                fontFamily="inherit"
+                fontWeight="900"
+                fontSize="28"
+                fill="white"
+                textAnchor="middle"
+                className="drop-shadow-md"
+              >
+                RK
+              </text>
+            </svg>
+          </div>
+
           <span className="text-xl font-bold uppercase tracking-tighter">RoyalKeys</span>
         </div>
 
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl relative mx-4">
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search keys, games, software..." 
+            placeholder="Search keys, games, software..."
             className="w-full bg-[#0a0c2e] border border-gray-700 rounded-lg py-2.5 px-4 pr-10 focus:outline-none focus:border-amber-500 transition-colors text-sm"
           />
           <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-500">
@@ -42,20 +84,6 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
         </form>
 
         <div className="flex items-center gap-4 md:gap-8">
-          <button 
-            onClick={onDashboardClick}
-            className="flex items-center gap-3 group"
-          >
-            <div className="w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-gray-400 group-hover:border-amber-500 transition-all">
-              <i className="fas fa-user text-xs"></i>
-            </div>
-            <div className="hidden lg:flex flex-col items-start leading-none text-left">
-              <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-0.5">My Account</span>
-              <span className="text-xs text-white font-bold group-hover:text-amber-500 transition-colors">
-                {user.isLoggedIn ? user.email.split('@')[0] : 'Sign In'}
-              </span>
-            </div>
-          </button>
 
           <div className="flex items-center gap-2 text-amber-500 cursor-pointer hover:scale-105 transition-transform">
             <div className="relative">
@@ -70,9 +98,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
       <nav className="bg-[#0a0c2e]/50 py-2 border-t border-gray-900">
         <div className="container mx-auto px-4 flex gap-6 text-[11px] font-black uppercase tracking-[0.15em] text-gray-400 overflow-x-auto scrollbar-hide">
           {Object.values(CategoryType).map((cat) => (
-            <button 
+            <button
               key={cat}
-              onClick={() => onCategoryClick(cat)} 
+              onClick={() => onCategoryClick(cat)}
               className="hover:text-amber-500 transition-colors whitespace-nowrap px-1 py-1"
             >
               {cat.replace('Best-Selling ', '').replace('Latest ', '').replace('Security & ', '')}

@@ -20,7 +20,7 @@ const App: React.FC = () => {
   const [activeInfoPage, setActiveInfoPage] = useState<InfoPageType | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
-  
+
   const [user, setUser] = useState<User>(() => {
     const defaultUser: User = {
       email: 'customer@royalkeys.io',
@@ -110,24 +110,23 @@ const App: React.FC = () => {
       <div className="bg-amber-500 py-1.5 text-center text-[9px] font-black uppercase tracking-[0.4em] text-[#04051a] relative z-50">
         Premium Global Keys • Instant Email Delivery • 24/7 Royal Support
       </div>
-      
-      <Navbar 
+
+      <Navbar
         onCategoryClick={handleCategoryNav}
         onHomeClick={handleHomeClick}
         onDashboardClick={() => setView('dashboard')}
         onSearch={(term) => { setSearchTerm(term); setView('catalog'); }}
-        user={user}
       />
-      
+
       <main className="flex-1">
         {view === 'home' && (
           <>
             <Hero onCategoryClick={handleCategoryNav} />
             {Object.values(CategoryType).map(cat => (
-              <ProductSection 
+              <ProductSection
                 key={cat}
-                title={cat} 
-                products={PRODUCTS.filter(p => p.category === cat)} 
+                title={cat}
+                products={PRODUCTS.filter(p => p.category === cat)}
                 onProductClick={handleProductClick}
               />
             ))}
@@ -148,9 +147,9 @@ const App: React.FC = () => {
         )}
 
         {view === 'product' && selectedProduct && (
-          <ProductDetail 
-            product={selectedProduct} 
-            onBuyNow={() => setView('checkout')} 
+          <ProductDetail
+            product={selectedProduct}
+            onBuyNow={() => setView('checkout')}
             onNavigateHome={handleHomeClick}
             onProductClick={handleProductClick}
           />
@@ -161,7 +160,7 @@ const App: React.FC = () => {
         )}
 
         {view === 'dashboard' && <Dashboard user={user} onNavigateHome={handleHomeClick} />}
-        
+
         {view === 'info' && activeInfoPage && (
           <StaticPage type={activeInfoPage} onNavigateHome={handleHomeClick} />
         )}
