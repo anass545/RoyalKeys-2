@@ -115,7 +115,8 @@ const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigateHome }) => {
                 <div className="w-12 h-12 bg-amber-500 text-[#04051a] rounded-full flex items-center justify-center font-bold mb-4">1</div>
                 <h3 className="text-white font-bold text-xl mb-4">Windows / Office</h3>
                 <ol className="list-decimal pl-5 space-y-2 text-gray-400">
-                  <li>Go to Settings > System > Activation</li>
+                  <li>Go to Settings &gt; System &gt; Activation</li>
+
                   <li>Click 'Change Product Key'</li>
                   <li>Enter the code sent to your email</li>
                   <li>Follow the prompts to finish activation</li>
