@@ -20,7 +20,6 @@ const App: React.FC = () => {
   const [activeInfoPage, setActiveInfoPage] = useState<InfoPageType | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
-
   const [user, setUser] = useState<User>(() => {
     const defaultUser: User = {
       email: 'customer@royalkeys.io',
@@ -110,14 +109,12 @@ const App: React.FC = () => {
       <div className="bg-amber-500 py-1.5 text-center text-[9px] font-black uppercase tracking-[0.4em] text-[#04051a] relative z-50">
         Premium Global Keys • Instant Email Delivery • 24/7 Royal Support
       </div>
-
       <Navbar
         onCategoryClick={handleCategoryNav}
         onHomeClick={handleHomeClick}
         onDashboardClick={() => setView('dashboard')}
         onSearch={(term) => { setSearchTerm(term); setView('catalog'); }}
       />
-
       <main className="flex-1">
         {view === 'home' && (
           <>
@@ -158,9 +155,7 @@ const App: React.FC = () => {
         {view === 'checkout' && selectedProduct && (
           <Checkout product={selectedProduct} onCancel={() => setView('product')} onSuccess={handleCheckoutSuccess} />
         )}
-
         {view === 'dashboard' && <Dashboard user={user} onNavigateHome={handleHomeClick} />}
-
         {view === 'info' && activeInfoPage && (
           <StaticPage type={activeInfoPage} onNavigateHome={handleHomeClick} />
         )}

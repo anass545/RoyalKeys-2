@@ -84,7 +84,6 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
         </form>
 
         <div className="flex items-center gap-4 md:gap-8">
-
           <div className="flex items-center gap-2 text-amber-500 cursor-pointer hover:scale-105 transition-transform">
             <div className="relative">
               <i className="fas fa-shopping-cart text-lg"></i>

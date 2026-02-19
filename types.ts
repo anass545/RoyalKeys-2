@@ -7,6 +7,8 @@ export interface Product {
   image: string;
   badge?: string;
   oldPrice?: number;
+  discount?: number;
+  instantDelivery?: boolean;
   description?: string;
 }
 
