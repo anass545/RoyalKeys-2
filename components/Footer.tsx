@@ -39,12 +39,14 @@ const Footer: React.FC<FooterProps> = ({ onLinkClick }) => {
       </div>
       <div className="container mx-auto px-4 pt-8 border-t border-gray-900 flex flex-wrap justify-between items-center gap-4 text-xs text-gray-500">
         <p>Copyright RoyalCDKeys.com © 2024, all rights reserved</p>
-        <button 
+        <button
           onClick={() => onLinkClick('faq')}
           className="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-blue-600/30 transition-all"
         >
-          <i className="fas fa-question-circle"></i>
           Aide
+        </button>
+        <button onClick={() => onLinkClick('admin-login' as any)} className="text-gray-700 hover:text-gray-500 text-[10px] uppercase font-bold tracking-widest">
+          Admin
         </button>
       </div>
     </footer>

@@ -4,12 +4,14 @@ export interface Product {
   title: string;
   price: number;
   category: string;
+
   image: string;
   badge?: string;
   oldPrice?: number;
   discount?: number;
   instantDelivery?: boolean;
   description?: string;
+  key_stock?: number;
 }
 
 export enum CategoryType {
@@ -42,4 +44,4 @@ export interface ChatMessage {
 
 export type InfoPageType = 'contact' | 'terms' | 'privacy' | 'refunds' | 'faq' | 'activation' | 'ticket';
 
-export type AppView = 'home' | 'product' | 'checkout' | 'catalog' | 'info' | 'dashboard';
+export type AppView = 'home' | 'product' | 'checkout' | 'catalog' | 'info' | 'dashboard' | 'admin-login' | 'admin-dashboard';

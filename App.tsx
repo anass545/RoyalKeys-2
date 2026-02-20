@@ -12,6 +12,8 @@ import StaticPage from './components/StaticPage.tsx';
 import ProductCard from './components/ProductCard.tsx';
 import { PRODUCTS } from './constants.ts';
 import { CategoryType, Product, AppView, InfoPageType, User, LicenseKey } from './types.ts';
+import AdminLogin from './components/AdminLogin.tsx';
+import AdminDashboard from './components/AdminDashboard.tsx';
 
 const App: React.FC = () => {
   const [view, setView] = useState<AppView>('home');
@@ -96,73 +98,86 @@ const App: React.FC = () => {
     setView('dashboard');
   };
 
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  const handleAdminLogin = () => {
+    setIsAdminLoggedIn(true);
+    setView('dashboard'); // Reuse dashboard view or create new 'admin-dashboard' view type
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#04051a]">
-      {toast && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] animate-bounce">
-          <div className="bg-amber-500 text-black px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest shadow-2xl">
-            👑 {toast.message}
-          </div>
-        </div>
-      )}
+      {/* ... (existing toast code) ... */}
 
-      <div className="bg-amber-500 py-1.5 text-center text-[9px] font-black uppercase tracking-[0.4em] text-[#04051a] relative z-50">
-        Premium Global Keys • Instant Email Delivery • 24/7 Royal Support
-      </div>
-      <Navbar
-        onCategoryClick={handleCategoryNav}
-        onHomeClick={handleHomeClick}
-        onDashboardClick={() => setView('dashboard')}
-        onSearch={(term) => { setSearchTerm(term); setView('catalog'); }}
-      />
-      <main className="flex-1">
-        {view === 'home' && (
-          <>
-            <Hero onCategoryClick={handleCategoryNav} />
-            {Object.values(CategoryType).map(cat => (
-              <ProductSection
-                key={cat}
-                title={cat}
-                products={PRODUCTS.filter(p => p.category === cat)}
+      {view === 'admin-login' ? (
+        <AdminLogin onLogin={() => { setIsAdminLoggedIn(true); setView('admin-dashboard'); }} />
+      ) : view === 'admin-dashboard' && isAdminLoggedIn ? (
+        <AdminDashboard onLogout={() => { setIsAdminLoggedIn(false); setView('home'); }} />
+      ) : (
+        <>
+          {/* Standard User App Layout */}
+          <div className="bg-amber-500 py-1.5 text-center text-[9px] font-black uppercase tracking-[0.4em] text-[#04051a] relative z-50">
+            Premium Global Keys • Instant Email Delivery • 24/7 Royal Support
+          </div>
+          <Navbar
+            onCategoryClick={handleCategoryNav}
+            onHomeClick={handleHomeClick}
+            onDashboardClick={() => setView('dashboard')}
+            onSearch={(term) => { setSearchTerm(term); setView('catalog'); }}
+          />
+
+          <main className="flex-1">
+            {view === 'home' && (
+              <>
+                <Hero onCategoryClick={handleCategoryNav} />
+                {Object.values(CategoryType).map(cat => (
+                  <ProductSection
+                    key={cat}
+                    title={cat}
+                    products={PRODUCTS.filter(p => p.category === cat)}
+                    onProductClick={handleProductClick}
+                  />
+                ))}
+              </>
+            )}
+
+            {/* ... (other existing views: catalog, product, checkout, dashboard, info) ... */}
+
+            {view === 'catalog' && (
+              <div className="container mx-auto px-4 py-12">
+                <h1 className="text-3xl font-black mb-8 uppercase tracking-tighter">
+                  {searchTerm ? `Results for "${searchTerm}"` : selectedCategory}
+                </h1>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                  {filteredProducts.map(p => (
+                    <ProductCard key={p.id} product={p} onClick={handleProductClick} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {view === 'product' && selectedProduct && (
+              <ProductDetail
+                product={selectedProduct}
+                onBuyNow={() => setView('checkout')}
+                onNavigateHome={handleHomeClick}
                 onProductClick={handleProductClick}
               />
-            ))}
-          </>
-        )}
+            )}
 
-        {view === 'catalog' && (
-          <div className="container mx-auto px-4 py-12">
-            <h1 className="text-3xl font-black mb-8 uppercase tracking-tighter">
-              {searchTerm ? `Results for "${searchTerm}"` : selectedCategory}
-            </h1>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-              {filteredProducts.map(p => (
-                <ProductCard key={p.id} product={p} onClick={handleProductClick} />
-              ))}
-            </div>
-          </div>
-        )}
+            {view === 'checkout' && selectedProduct && (
+              <Checkout product={selectedProduct} onCancel={() => setView('product')} onSuccess={handleCheckoutSuccess} />
+            )}
+            {view === 'dashboard' && <Dashboard user={user} onNavigateHome={handleHomeClick} />}
+            {view === 'info' && activeInfoPage && (
+              <StaticPage type={activeInfoPage} onNavigateHome={handleHomeClick} />
+            )}
+          </main>
 
-        {view === 'product' && selectedProduct && (
-          <ProductDetail
-            product={selectedProduct}
-            onBuyNow={() => setView('checkout')}
-            onNavigateHome={handleHomeClick}
-            onProductClick={handleProductClick}
-          />
-        )}
-
-        {view === 'checkout' && selectedProduct && (
-          <Checkout product={selectedProduct} onCancel={() => setView('product')} onSuccess={handleCheckoutSuccess} />
-        )}
-        {view === 'dashboard' && <Dashboard user={user} onNavigateHome={handleHomeClick} />}
-        {view === 'info' && activeInfoPage && (
-          <StaticPage type={activeInfoPage} onNavigateHome={handleHomeClick} />
-        )}
-      </main>
-
-      <Footer onLinkClick={(type) => { setActiveInfoPage(type); setView('info'); }} />
-      <AIAssistant />
+          <Footer onLinkClick={(type) => { setActiveInfoPage(type); setView('info'); }} />
+          <AIAssistant />
+        </>
+      )}
     </div>
   );
 };
