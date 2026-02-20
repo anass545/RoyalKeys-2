@@ -174,7 +174,14 @@ const App: React.FC = () => {
             )}
           </main>
 
-          <Footer onLinkClick={(type) => { setActiveInfoPage(type); setView('info'); }} />
+          <Footer onLinkClick={(type) => {
+            if (type === 'admin-login') {
+              setView('admin-login');
+            } else {
+              setActiveInfoPage(type);
+              setView('info');
+            }
+          }} />
           <AIAssistant />
         </>
       )}

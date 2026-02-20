@@ -42,6 +42,6 @@ export interface ChatMessage {
   text: string;
 }
 
-export type InfoPageType = 'contact' | 'terms' | 'privacy' | 'refunds' | 'faq' | 'activation' | 'ticket';
+export type InfoPageType = 'contact' | 'terms' | 'privacy' | 'refunds' | 'faq' | 'activation' | 'ticket' | 'admin-login';
 
 export type AppView = 'home' | 'product' | 'checkout' | 'catalog' | 'info' | 'dashboard' | 'admin-login' | 'admin-dashboard';
