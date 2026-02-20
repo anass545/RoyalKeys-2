@@ -24,15 +24,11 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
   return (
     <header className="sticky top-0 z-50 bg-[#04051a]/95 backdrop-blur-sm border-b border-gray-800">
       <div className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2 cursor-pointer group" onClick={onHomeClick}>
-          <div
-            onClick={onHomeClick}
-            className="flex-shrink-0 cursor-pointer flex items-center gap-2 hover:opacity-90 transition-opacity"
-          >
-            <Logo className="h-10 w-auto" />
-          </div>
-
-
+        <div
+          onClick={onHomeClick}
+          className="flex items-center gap-2 cursor-pointer group hover:opacity-90 transition-opacity"
+        >
+          <Logo className="h-16 w-auto" />
         </div>
 
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl relative mx-4">
