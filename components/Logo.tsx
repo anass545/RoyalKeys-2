@@ -7,7 +7,7 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({ className = "w-10 h-10", showText = true }) => {
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
             <svg
                 viewBox="0 0 100 100"
                 fill="none"
@@ -21,35 +21,37 @@ const Logo: React.FC<LogoProps> = ({ className = "w-10 h-10", showText = true })
                     </linearGradient>
                 </defs>
 
-                {/* Shield Base */}
+                {/* Shield Outline - Cut at top for pixels */}
                 <path
-                    d="M50 95C50 95 85 85 90 50V20L50 5L10 20V50C15 85 50 95 50 95Z"
+                    d="M50 92C50 92 10 75 10 35V20L50 5L90 20V35"
                     stroke="url(#softonicusGradient)"
-                    strokeWidth="6"
+                    strokeWidth="8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />
 
-                {/* Power Button Line */}
+                {/* Keyhole Shape */}
                 <path
-                    d="M50 5V35"
+                    d="M50 35V25"
                     stroke="url(#softonicusGradient)"
-                    strokeWidth="6"
+                    strokeWidth="8"
                     strokeLinecap="round"
                 />
+                <circle cx="50" cy="55" r="8" fill="url(#softonicusGradient)" />
+                <path d="M50 55L42 75H58L50 55Z" fill="url(#softonicusGradient)" />
 
-                {/* Stylized S */}
-                <path
-                    d="M70 35C70 35 70 30 50 30C30 30 30 50 50 50C70 50 70 70 50 70C30 70 30 65 30 65"
-                    stroke="url(#softonicusGradient)"
-                    strokeWidth="6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
+                {/* Digital Pixels (Top Right) */}
+                <rect x="75" y="15" width="8" height="8" rx="1" fill="url(#softonicusGradient)" opacity="0.8" />
+                <rect x="85" y="5" width="6" height="6" rx="1" fill="url(#softonicusGradient)" opacity="0.6" />
+                <rect x="65" y="25" width="6" height="6" rx="1" fill="url(#softonicusGradient)" opacity="0.9" />
+
             </svg>
 
             {showText && (
-                <span className="text-xl font-black uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                <span
+                    className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
+                    style={{ fontFamily: '"Orbitron", sans-serif', letterSpacing: '0.05em' }}
+                >
                     Softonicus
                 </span>
             )}
