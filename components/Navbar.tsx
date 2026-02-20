@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { CategoryType } from '../types.ts';
 
+import Logo from './Logo';
+
 interface NavbarProps {
   onCategoryClick: (category: CategoryType) => void;
   onHomeClick: () => void;
@@ -67,11 +69,11 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
             </svg>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-black text-xl shadow-lg">
-              S
-            </div>
-            <span className="text-xl font-black uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Softonicus</span>
+          <div
+            onClick={onHomeClick}
+            className="flex-shrink-0 cursor-pointer flex items-center gap-2 hover:opacity-90 transition-opacity"
+          >
+            <Logo className="w-10 h-10" />
           </div>
         </div>
 
