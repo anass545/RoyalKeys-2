@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
           onClick={onHomeClick}
           className="flex items-center gap-2 cursor-pointer group hover:opacity-90 transition-opacity"
         >
-          <Logo className="h-20 w-auto" />
+          <Logo className="h-28 w-auto" />
         </div>
 
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl relative mx-4">
