@@ -25,56 +25,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
     <header className="sticky top-0 z-50 bg-[#04051a]/95 backdrop-blur-sm border-b border-gray-800">
       <div className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2 cursor-pointer group" onClick={onHomeClick}>
-          <div className="relative w-10 h-10 group-hover:scale-110 transition-transform duration-300">
-            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(84,255,38,0.5)]">
-              <defs>
-                <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#54FF26" />
-                  <stop offset="50%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#54FF26" />
-                </linearGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <path
-                d="M50 5 L93.3 30 V80 L50 105 L6.7 80 V30 Z"
-                fill="none"
-                stroke="url(#logo-gradient)"
-                strokeWidth="3"
-                className="animate-[spin_8s_linear_infinite]"
-              />
-              <path
-                d="M50 20 L75 35 V65 L50 80 L25 65 V35 Z"
-                fill="rgba(84,255,38,0.1)"
-                stroke="#54FF26"
-                strokeWidth="2"
-              />
-              <text
-                x="50"
-                y="62"
-                fontFamily="inherit"
-                fontWeight="900"
-                fontSize="28"
-                fill="white"
-                textAnchor="middle"
-                className="drop-shadow-md"
-              >
-                RK
-              </text>
-            </svg>
-          </div>
-
           <div
             onClick={onHomeClick}
             className="flex-shrink-0 cursor-pointer flex items-center gap-2 hover:opacity-90 transition-opacity"
           >
             <Logo className="w-10 h-10" />
           </div>
+
+
         </div>
 
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl relative mx-4">
