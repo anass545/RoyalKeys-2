@@ -87,7 +87,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
             {/* Sidebar */}
             <aside className="w-64 bg-[#0a0b1e] border-r border-white/5 flex flex-col fixed h-full z-10">
                 <div className="p-8">
-                    <Logo className="w-12 h-12" />
+                    <Logo className="h-12 w-auto" />
                     <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-2 ml-1">Control Center</p>
                 </div>
 

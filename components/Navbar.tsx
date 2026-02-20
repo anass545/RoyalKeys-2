@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
             onClick={onHomeClick}
             className="flex-shrink-0 cursor-pointer flex items-center gap-2 hover:opacity-90 transition-opacity"
           >
-            <Logo className="w-10 h-10" />
+            <Logo className="h-10 w-auto" />
           </div>
 
 
