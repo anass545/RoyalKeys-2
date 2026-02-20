@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '')
 
   return {
-    base: '/RoyalKeys-2/', // 🔥 هادي هي المهمة
+    base: '/', // Changed for Cloudflare Pages
 
     server: {
       port: 3000,
