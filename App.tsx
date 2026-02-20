@@ -16,7 +16,11 @@ import AdminLogin from './components/AdminLogin.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<AppView>('home');
+  const [view, setView] = useState<AppView>(() => {
+    const path = window.location.pathname;
+    if (path === '/admin' || path === '/admin/') return 'admin-login';
+    return 'home';
+  });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [activeInfoPage, setActiveInfoPage] = useState<InfoPageType | null>(null);
@@ -175,12 +179,8 @@ const App: React.FC = () => {
           </main>
 
           <Footer onLinkClick={(type) => {
-            if (type === 'admin-login') {
-              setView('admin-login');
-            } else {
-              setActiveInfoPage(type);
-              setView('info');
-            }
+            setActiveInfoPage(type);
+            setView('info');
           }} />
           <AIAssistant />
         </>

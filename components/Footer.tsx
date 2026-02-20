@@ -45,9 +45,7 @@ const Footer: React.FC<FooterProps> = ({ onLinkClick }) => {
         >
           Aide
         </button>
-        <button onClick={() => onLinkClick('admin-login')} className="bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border border-red-600/30">
-          Admin Portal
-        </button>
+
       </div>
     </footer>
   );
