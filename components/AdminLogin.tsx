@@ -51,7 +51,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full bg-[#04051a] text-white p-3 rounded border border-white/10 focus:border-amber-500 focus:outline-none transition-colors"
-                            placeholder="admin@royalkeys.io"
+                            placeholder="admin@softonicus.com"
                             required
                         />
                     </div>

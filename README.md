@@ -1,5 +1,5 @@
 
-# 👑 RoyalKeys - Digital Marketplace
+# 👑 Softonicus - Digital Marketplace
 
 A high-end marketplace for software keys, game licenses, and premium subscriptions.
 

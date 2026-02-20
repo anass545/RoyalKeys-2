@@ -28,12 +28,12 @@ const App: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
   const [user, setUser] = useState<User>(() => {
     const defaultUser: User = {
-      email: 'customer@royalkeys.io',
+      email: 'customer@softonicus.com',
       isLoggedIn: true,
       keys: []
     };
     try {
-      const saved = localStorage.getItem('royalkeys_session');
+      const saved = localStorage.getItem('softonicus_session');
       return saved ? JSON.parse(saved) : defaultUser;
     } catch (e) {
       return defaultUser;
@@ -41,7 +41,7 @@ const App: React.FC = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem('royalkeys_session', JSON.stringify(user));
+    localStorage.setItem('softonicus_session', JSON.stringify(user));
   }, [user]);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ const App: React.FC = () => {
         <>
           {/* Standard User App Layout */}
           <div className="bg-amber-500 py-1.5 text-center text-[9px] font-black uppercase tracking-[0.4em] text-[#04051a] relative z-50">
-            Premium Global Keys • Instant Email Delivery • 24/7 Royal Support
+            Premium Global Keys • Instant Email Delivery • 24/7 Softonicus Support
           </div>
           <Navbar
             onCategoryClick={handleCategoryNav}

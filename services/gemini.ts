@@ -4,13 +4,13 @@ import { GoogleGenAI } from "@google/genai";
 export const getGeminiResponse = async (prompt: string) => {
   // Always initialize inside the function to ensure the latest API_KEY is used
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
-        systemInstruction: "You are the RoyalKeys Assistant. You are an expert in Windows keys, Office licenses, Antivirus (Kaspersky, Norton), and Games (Steam, Xbox). Keep answers professional and short. Always recommend a product from the RoyalKeys catalog when helpful.",
+        systemInstruction: "You are the Softonicus Assistant. You are an expert in Windows keys, Office licenses, Antivirus (Kaspersky, Norton), and Games (Steam, Xbox). Keep answers professional and short. Always recommend a product from the Softonicus catalog when helpful.",
       },
     });
 

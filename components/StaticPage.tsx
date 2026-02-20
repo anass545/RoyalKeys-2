@@ -42,7 +42,7 @@ const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigateHome }) => {
             <div className="space-y-6 text-gray-400 leading-relaxed">
               <section>
                 <h3 className="text-white font-bold text-xl mb-2">1. Acceptance of Terms</h3>
-                <p>By accessing RoyalKeys, you agree to be bound by these Terms and Conditions and all applicable laws and regulations.</p>
+                <p>By accessing Softonicus, you agree to be bound by these Terms and Conditions and all applicable laws and regulations.</p>
               </section>
               <section>
                 <h3 className="text-white font-bold text-xl mb-2">2. License Delivery</h3>
@@ -60,7 +60,7 @@ const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigateHome }) => {
           <div className="prose prose-invert max-w-none">
             <h1 className="text-3xl font-bold mb-8">Privacy Policy</h1>
             <div className="space-y-6 text-gray-400 leading-relaxed">
-              <p>At RoyalKeys, your privacy is our top priority. We collect only the information necessary to process your orders and provide support.</p>
+              <p>At Softonicus, your privacy is our top priority. We collect only the information necessary to process your orders and provide support.</p>
               <h3 className="text-white font-bold text-xl mb-2">Information We Collect</h3>
               <ul className="list-disc pl-5 space-y-2">
                 <li>Email address for digital delivery.</li>
@@ -142,7 +142,7 @@ const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigateHome }) => {
 
   return (
     <div className="container mx-auto px-4 py-12 animate-in fade-in duration-500">
-      <button 
+      <button
         onClick={onNavigateHome}
         className="text-gray-400 hover:text-amber-500 transition-colors mb-8 flex items-center gap-2"
       >

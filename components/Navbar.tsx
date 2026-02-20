@@ -67,7 +67,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
             </svg>
           </div>
 
-          <span className="text-xl font-bold uppercase tracking-tighter">RoyalKeys</span>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-black text-xl shadow-lg">
+              S
+            </div>
+            <span className="text-xl font-black uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Softonicus</span>
+          </div>
         </div>
 
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl relative mx-4">
