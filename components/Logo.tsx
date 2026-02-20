@@ -16,8 +16,9 @@ const Logo: React.FC<LogoProps> = ({ className = "w-10 h-10", showText = true })
             >
                 <defs>
                     <linearGradient id="softonicusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#2563eb" /> {/* blue-600 */}
-                        <stop offset="100%" stopColor="#9333ea" /> {/* purple-600 */}
+                        <stop offset="0%" stopColor="#4ade80" /> {/* green-400 */}
+                        <stop offset="50%" stopColor="#22d3ee" /> {/* cyan-400 */}
+                        <stop offset="100%" stopColor="#3b82f6" /> {/* blue-500 */}
                     </linearGradient>
                 </defs>
 
@@ -49,7 +50,7 @@ const Logo: React.FC<LogoProps> = ({ className = "w-10 h-10", showText = true })
 
             {showText && (
                 <span
-                    className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
+                    className="text-2xl font-bold uppercase tracking-tighter text-[#4ade80]"
                     style={{ fontFamily: '"Orbitron", sans-serif', letterSpacing: '0.05em' }}
                 >
                     Softonicus
