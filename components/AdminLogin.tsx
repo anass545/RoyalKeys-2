@@ -18,6 +18,19 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
 
     React.useEffect(() => {
         const hash = window.location.hash;
+        const params = new URLSearchParams(hash.replace('#', '?'));
+
+        // Handle explicit errors from Supabase in the URL
+        const errorCode = params.get('error_code');
+        const errorDesc = params.get('error_description');
+
+        if (errorCode === 'otp_expired' || errorCode === 'access_denied') {
+            setError(errorDesc || 'This recovery link has expired or is invalid. Please request a new one.');
+            setResetMode('forgot');
+            window.location.hash = ''; // Clean up URL
+            return;
+        }
+
         if (hash.includes('type=recovery') || hash.includes('access_token=')) {
             setResetMode('update');
         }
@@ -67,14 +80,18 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
             return;
         }
 
+        // Use a more robust dynamic redirect that handles both local and live sites
+        // This ensures the link always points back to exactly where the user is
+        const redirectUrl = window.location.origin + window.location.pathname;
+
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + window.location.pathname,
+            redirectTo: redirectUrl,
         });
 
         if (error) {
             setError(error.message);
         } else {
-            setMessage('Password reset link sent to your email.');
+            setMessage('A secure recovery link has been sent to your email.');
         }
         setLoading(false);
     };
