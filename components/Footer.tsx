@@ -8,8 +8,8 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ onLinkClick }) => {
   return (
-    <footer className="bg-[#020314] pt-16 pb-8">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+    <footer className="bg-[#020314] pt-8 pb-8">
+      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <div>
           <h4 className="font-bold text-gray-100 mb-6 uppercase text-sm tracking-wider">About Softonicus</h4>
           <ul className="space-y-3 text-sm text-gray-400">

@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCategoryClick, onHomeClick, onDashboa
 
   return (
     <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-sm border-b border-gray-800">
-      <div className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="container mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-4">
         <div
           onClick={onHomeClick}
           className="flex items-center gap-2 cursor-pointer group hover:opacity-90 transition-opacity"

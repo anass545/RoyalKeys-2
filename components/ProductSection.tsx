@@ -13,8 +13,8 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products, onProd
   if (products.length === 0) return null;
 
   return (
-    <section className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6">
+    <section className="container mx-auto px-4 py-2">
+      <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl font-bold text-gray-100">{title}</h2>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
