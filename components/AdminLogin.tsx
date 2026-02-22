@@ -6,7 +6,7 @@ interface AdminLoginProps {
     onLogin: () => void;
 }
 
-const ALLOWED_ADMINS = ['v0896980v@gmail.com', 'mtcrs604@gmail.com', 'admin@softonicus.com']; // Kept admin for transition if needed, but primarily restricted to your emails
+const ALLOWED_ADMINS = ['v0896980v@gmail.com', 'mtcrs604@gmail.com'];
 
 const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
     const [email, setEmail] = useState('');
@@ -36,7 +36,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
         }
 
         // Temporary Master Password Fallback (Updated to your email)
-        if ((email === 'v0896980v@gmail.com' || email === 'admin@softonicus.com') && password === 'admin123456') {
+        if (email === 'v0896980v@gmail.com' && password === 'admin123456') {
             onLogin();
             return;
         }
@@ -59,6 +59,13 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
         setLoading(true);
         setError(null);
         setMessage(null);
+
+        // Security Whitelist Check for Reset
+        if (!ALLOWED_ADMINS.includes(email)) {
+            setError('Access Denied: This email is not authorized for password recovery.');
+            setLoading(false);
+            return;
+        }
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: window.location.origin + window.location.pathname,
