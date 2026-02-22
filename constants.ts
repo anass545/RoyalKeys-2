@@ -90,47 +90,4 @@ export const PRODUCTS: Product[] = [
     instantDelivery: true
   },
 
-  // GAMES
-  {
-    id: 'g-mc',
-    title: 'Minecraft Java & Bedrock Edition',
-    price: 18.20,
-    category: CategoryType.GAMES,
-    image: 'https://images.unsplash.com/photo-1634838080334-28befa9effd0?w=800',
-    oldPrice: 29.99,
-    discount: 39,
-    instantDelivery: true
-  },
-  {
-    id: 'g-gta5',
-    title: 'Grand Theft Auto V: Premium Edition',
-    price: 11.50,
-    category: CategoryType.GAMES,
-    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800',
-    oldPrice: 29.99,
-    discount: 61,
-    instantDelivery: true
-  },
-
-  // ANTIVIRUS
-  {
-    id: 'av-kas',
-    title: 'Kaspersky Total Security 2024 - 1PC',
-    price: 12.80,
-    category: CategoryType.ANTIVIRUS,
-    image: 'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800',
-    oldPrice: 59.99,
-    discount: 78,
-    instantDelivery: true
-  },
-  {
-    id: 'av-bit',
-    title: 'Bitdefender Total Security (3 Devices)',
-    price: 19.99,
-    category: CategoryType.ANTIVIRUS,
-    image: 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=800',
-    oldPrice: 89.99,
-    discount: 77,
-    instantDelivery: true
-  },
 ];

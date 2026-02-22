@@ -17,9 +17,7 @@ export interface Product {
 export enum CategoryType {
   SOFTWARE = 'Best-Selling Software',
   TRENDING = 'Trending Now',
-  SUBSCRIPTIONS = 'Subscriptions',
-  GAMES = 'Latest Games',
-  ANTIVIRUS = 'Security & Antivirus'
+  SUBSCRIPTIONS = 'Subscriptions'
 }
 
 export interface LicenseKey {
