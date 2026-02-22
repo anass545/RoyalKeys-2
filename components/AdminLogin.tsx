@@ -11,8 +11,15 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [resetMode, setResetMode] = useState(false);
+    const [resetMode, setResetMode] = useState<'login' | 'forgot' | 'update'>('login');
     const [message, setMessage] = useState<string | null>(null);
+
+    React.useEffect(() => {
+        const hash = window.location.hash;
+        if (hash.includes('type=recovery') || hash.includes('access_token=')) {
+            setResetMode('update');
+        }
+    }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,7 +52,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
         setMessage(null);
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/admin`,
+            redirectTo: window.location.origin + window.location.pathname,
         });
 
         if (error) {
@@ -56,6 +63,29 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
         setLoading(false);
     };
 
+    const handleUpdatePassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        setMessage(null);
+
+        const { error } = await supabase.auth.updateUser({
+            password: password
+        });
+
+        if (error) {
+            setError(error.message);
+            setLoading(false);
+        } else {
+            setMessage('Password updated successfully! You can now log in.');
+            setResetMode('login');
+            setPassword('');
+            setLoading(false);
+            // Clear hash
+            window.location.hash = '';
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#04051a] flex items-center justify-center p-4">
             <div className="bg-[#1a1c35] p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/5">
@@ -63,7 +93,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                     Admin Portal
                 </h2>
                 <p className="text-gray-500 text-[10px] text-center uppercase tracking-widest font-bold mb-8">
-                    {resetMode ? 'Password Recovery' : 'Secure Authorization'}
+                    {resetMode === 'forgot' ? 'Password Recovery' : resetMode === 'update' ? 'Set New Password' : 'Secure Authorization'}
                 </p>
 
                 {error && (
@@ -78,7 +108,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                     </div>
                 )}
 
-                {!resetMode ? (
+                {resetMode === 'login' ? (
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div>
                             <label className="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-2">Email</label>
@@ -97,7 +127,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                                 <label className="block text-gray-400 text-xs uppercase font-bold tracking-wider">Password</label>
                                 <button
                                     type="button"
-                                    onClick={() => setResetMode(true)}
+                                    onClick={() => setResetMode('forgot')}
                                     className="text-amber-500 hover:text-amber-400 text-[10px] font-black uppercase tracking-wider"
                                 >
                                     Forgot?
@@ -121,7 +151,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                             {loading ? 'Accessing...' : 'Enter Vault'}
                         </button>
                     </form>
-                ) : (
+                ) : resetMode === 'forgot' ? (
                     <form onSubmit={handleResetPassword} className="space-y-4">
                         <div>
                             <label className="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-2">Email Address</label>
@@ -145,10 +175,33 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
 
                         <button
                             type="button"
-                            onClick={() => setResetMode(false)}
+                            onClick={() => setResetMode('login')}
                             className="w-full text-gray-500 hover:text-white text-[10px] font-black uppercase tracking-wider mt-4"
                         >
                             Back to Login
+                        </button>
+                    </form>
+                ) : (
+                    <form onSubmit={handleUpdatePassword} className="space-y-4">
+                        <div>
+                            <label className="block text-gray-400 text-xs uppercase font-bold tracking-wider mb-2">New Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full bg-[#04051a] text-white p-3 rounded border border-white/10 focus:border-amber-500 focus:outline-none transition-colors"
+                                placeholder="Min 6 characters"
+                                minLength={6}
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-amber-500 hover:bg-amber-400 text-[#04051a] font-black uppercase py-4 rounded tracking-widest transition-all transform active:scale-95"
+                        >
+                            {loading ? 'Updating...' : 'Save New Password'}
                         </button>
                     </form>
                 )}

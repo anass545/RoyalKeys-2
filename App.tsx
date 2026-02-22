@@ -18,7 +18,8 @@ import AdminDashboard from './components/AdminDashboard.tsx';
 const App: React.FC = () => {
   const [view, setView] = useState<AppView>(() => {
     const path = window.location.pathname;
-    if (path === '/admin' || path === '/admin/') return 'admin-login';
+    const hash = window.location.hash;
+    if (path === '/admin' || path === '/admin/' || hash.includes('access_token=') || hash.includes('type=recovery')) return 'admin-login';
     return 'home';
   });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
