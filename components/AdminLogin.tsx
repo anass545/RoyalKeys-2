@@ -6,6 +6,8 @@ interface AdminLoginProps {
     onLogin: () => void;
 }
 
+const ALLOWED_ADMINS = ['v0896980v@gmail.com', 'mtcrs604@gmail.com', 'admin@softonicus.com']; // Kept admin for transition if needed, but primarily restricted to your emails
+
 const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,8 +28,15 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
         setLoading(true);
         setError(null);
 
-        // Temporary Master Password Fallback
-        if (email === 'admin@softonicus.com' && password === 'admin123456') {
+        // Whitelist check
+        if (!ALLOWED_ADMINS.includes(email)) {
+            setError('Access Denied: This email is not authorized to access the Admin Portal.');
+            setLoading(false);
+            return;
+        }
+
+        // Temporary Master Password Fallback (Updated to your email)
+        if ((email === 'v0896980v@gmail.com' || email === 'admin@softonicus.com') && password === 'admin123456') {
             onLogin();
             return;
         }
@@ -117,7 +126,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full bg-[#04051a] text-white p-3 rounded border border-white/10 focus:border-amber-500 focus:outline-none transition-colors"
-                                placeholder="admin@softonicus.com"
+                                placeholder="v0896980v@gmail.com"
                                 required
                             />
                         </div>
