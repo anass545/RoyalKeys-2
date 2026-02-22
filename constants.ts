@@ -91,3 +91,5 @@ export const PRODUCTS: Product[] = [
   },
 
 ];
+
+export const ALLOWED_ADMINS = ['v0896980v@gmail.com', 'mtcrs604@gmail.com'];

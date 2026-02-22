@@ -14,6 +14,8 @@ import { PRODUCTS } from './constants.ts';
 import { CategoryType, Product, AppView, InfoPageType, User, LicenseKey } from './types.ts';
 import AdminLogin from './components/AdminLogin.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
+import { supabase } from './lib/supabase.ts';
+import { ALLOWED_ADMINS } from './constants.ts';
 
 const App: React.FC = () => {
   const [view, setView] = useState<AppView>(() => {
@@ -40,6 +42,35 @@ const App: React.FC = () => {
       return defaultUser;
     }
   });
+
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // 1. Initial Session Check
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email && ALLOWED_ADMINS.includes(session.user.email)) {
+        setIsAdminLoggedIn(true);
+        // If we were on home but have a session, maybe stay on home? 
+        // Or if the URL is /admin, ensure we go to dashboard.
+        if (window.location.pathname.includes('/admin')) {
+          setView('admin-dashboard');
+        }
+      }
+    };
+    checkSession();
+
+    // 2. Auth State Sync
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user?.email && ALLOWED_ADMINS.includes(session.user.email)) {
+        setIsAdminLoggedIn(true);
+      } else {
+        setIsAdminLoggedIn(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('softonicus_session', JSON.stringify(user));
@@ -103,11 +134,10 @@ const App: React.FC = () => {
     setView('dashboard');
   };
 
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
-
-  const handleAdminLogin = () => {
-    setIsAdminLoggedIn(true);
-    setView('dashboard'); // Reuse dashboard view or create new 'admin-dashboard' view type
+  const handleAdminLogout = async () => {
+    await supabase.auth.signOut();
+    setIsAdminLoggedIn(false);
+    setView('home');
   };
 
   return (
@@ -117,7 +147,7 @@ const App: React.FC = () => {
       {view === 'admin-login' ? (
         <AdminLogin onLogin={() => { setIsAdminLoggedIn(true); setView('admin-dashboard'); }} />
       ) : view === 'admin-dashboard' && isAdminLoggedIn ? (
-        <AdminDashboard onLogout={() => { setIsAdminLoggedIn(false); setView('home'); }} />
+        <AdminDashboard onLogout={handleAdminLogout} />
       ) : (
         <>
           {/* Standard User App Layout */}

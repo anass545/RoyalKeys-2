@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase.ts';
+import { ALLOWED_ADMINS } from '../constants.ts';
 
 
 interface AdminLoginProps {
     onLogin: () => void;
 }
-
-const ALLOWED_ADMINS = ['v0896980v@gmail.com', 'mtcrs604@gmail.com'];
 
 const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
     const [email, setEmail] = useState('');

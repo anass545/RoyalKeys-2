@@ -104,16 +104,28 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                     >
                         <ShoppingBag size={18} /> Products
                     </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <button
+                        onClick={() => setActiveTab('inventory')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+                    >
                         <Package size={18} /> Inventory
                     </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <button
+                        onClick={() => setActiveTab('sales')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'sales' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+                    >
                         <BarChart3 size={18} /> Sales
                     </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <button
+                        onClick={() => setActiveTab('messages')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'messages' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+                    >
                         <MessageSquare size={18} /> Messages
                     </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+                    <button
+                        onClick={() => setActiveTab('settings')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'settings' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+                    >
                         <Settings size={18} /> Settings
                     </button>
                 </nav>
@@ -227,6 +239,142 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                )}
+
+                {activeTab === 'inventory' && (
+                    <div className="bg-[#1a1c35] rounded-2xl border border-white/5 overflow-hidden">
+                        <table className="w-full text-left">
+                            <thead className="bg-[#0a0b1e] border-b border-white/5">
+                                <tr>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Product</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Stock</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Price</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
+                                    <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {products.map(p => (
+                                    <tr key={p.id} className="hover:bg-white/5 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <img src={p.image} className="w-8 h-8 rounded bg-gray-800 object-cover" />
+                                                <span className="text-sm font-bold text-white truncate max-w-[200px]">{p.title}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-300">Unlimited</td>
+                                        <td className="px-6 py-4 text-sm font-bold text-green-400">${p.price}</td>
+                                        <td className="px-6 py-4">
+                                            <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-[10px] font-black uppercase tracking-widest">Active</span>
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <button className="text-blue-400 hover:text-blue-300 text-xs font-bold mr-3 underline decoration-blue-400/30">Restock</button>
+                                            <button className="text-gray-500 hover:text-white text-xs font-bold transition-colors">Manage</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {activeTab === 'sales' && (
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <StatCard title="Total Volume" value="$12,400" subtext="+5.2% vs yesterday" icon={DollarSign} color="blue" />
+                            <StatCard title="Conversion" value="3.2%" subtext="Consistent performance" icon={BarChart3} color="purple" />
+                            <StatCard title="Customers" value="482" subtext="New accounts today" icon={Users} color="pink" />
+                        </div>
+                        <div className="bg-[#1a1c35] rounded-2xl border border-white/5 p-6">
+                            <h3 className="font-bold text-white mb-6 uppercase tracking-widest text-xs">Recent Transactions</h3>
+                            <div className="space-y-4">
+                                {[1, 2, 3, 4, 5].map((i) => (
+                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-[#04051a]/50 border border-white/5">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">#O</div>
+                                            <div>
+                                                <div className="text-white text-sm font-bold">Order #7432{i}</div>
+                                                <div className="text-gray-500 text-[10px]">Processing • {i} min ago</div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-green-400 font-bold">$24.99</div>
+                                            <div className="text-gray-500 text-[10px]">Stripe • ID: {Math.random().toString(36).substring(7).toUpperCase()}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'messages' && (
+                    <div className="bg-[#1a1c35] rounded-2xl border border-white/5 h-[600px] flex flex-col">
+                        <div className="p-6 border-b border-white/5 flex justify-between items-center">
+                            <h3 className="text-white font-bold uppercase tracking-widest text-xs">Support Inbox</h3>
+                            <span className="bg-amber-500 text-[#04051a] px-2 py-0.5 rounded text-[10px] font-black">2 NEW</span>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className={`p-4 rounded-2xl border ${i === 1 ? 'border-amber-500/30 bg-amber-500/5' : 'border-white/5 bg-[#04051a]/30'} hover:border-white/10 cursor-pointer transition-all`}>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className="text-xs font-black text-white">Customer Support Inquiry #{i}</span>
+                                        <span className="text-[10px] text-gray-500 uppercase font-bold">{i}h ago</span>
+                                    </div>
+                                    <p className="text-gray-400 text-xs line-clamp-2 italic leading-relaxed">
+                                        "Hi RoyalKeys team, I purchased a Windows 11 key but I am having trouble activating it on my new build. Can you please assist..."
+                                    </p>
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <div className="text-[10px] text-blue-400 font-black uppercase">Pending Response</div>
+                                        <button className="text-white bg-blue-600 px-3 py-1 rounded text-[10px] font-black uppercase hover:bg-blue-500 transition-colors">Reply Now</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'settings' && (
+                    <div className="max-w-4xl space-y-6">
+                        <div className="bg-[#1a1c35] rounded-2xl border border-white/5 p-8">
+                            <h3 className="text-white font-bold uppercase tracking-widest text-xs mb-8 flex items-center gap-2">
+                                <Settings size={14} className="text-gray-500" /> Portal Configuration
+                            </h3>
+
+                            <div className="space-y-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-4">
+                                        <label className="block text-gray-400 text-[10px] uppercase font-black tracking-widest">Portal Name</label>
+                                        <input type="text" defaultValue="RoyalKeys Control Center" className="w-full bg-[#04051a] border border-white/10 rounded-lg p-3 text-white text-sm focus:border-amber-500 focus:outline-none" />
+                                    </div>
+                                    <div className="space-y-4">
+                                        <label className="block text-gray-400 text-[10px] uppercase font-black tracking-widest">Admin Notification Email</label>
+                                        <input type="email" defaultValue="v0896980v@gmail.com" className="w-full bg-[#04051a] border border-white/10 rounded-lg p-3 text-white text-sm focus:border-amber-500 focus:outline-none" />
+                                    </div>
+                                </div>
+
+                                <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+                                    <h4 className="text-amber-500 font-black uppercase text-[10px] tracking-widest mb-4">Security Whitelist</h4>
+                                    <div className="space-y-3">
+                                        {['v0896980v@gmail.com', 'mtcrs604@gmail.com'].map(email => (
+                                            <div key={email} className="flex items-center justify-between bg-[#04051a]/50 p-3 rounded-xl border border-white/5">
+                                                <span className="text-white text-xs font-bold underline decoration-blue-500/30">{email}</span>
+                                                <span className="text-[10px] text-green-400 font-black uppercase tracking-tighter">Authorized</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button className="mt-4 w-full bg-white text-[#04051a] py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">
+                                        Register New Admin Access
+                                    </button>
+                                </div>
+
+                                <div className="flex justify-end gap-4 border-t border-white/5 pt-8">
+                                    <button className="px-6 py-3 text-gray-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors">Discard Changes</button>
+                                    <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">Save Global Settings</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
 
