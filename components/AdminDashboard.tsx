@@ -193,7 +193,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                             </div>
                                             <div className="flex-1">
                                                 <div className="text-white text-sm font-bold">Microsoft Windows 11 Professional</div>
-                                                <div className="text-gray-500 text-xs">customer{i}@example.com</div>
+                                                <div className="text-gray-500 text-xs">{i % 2 === 0 ? 'v0896980v@gmail.com' : 'mtcrs604@gmail.com'}</div>
                                             </div>
                                             <div className="text-right">
                                                 <div className="text-white font-bold">$1.00</div>

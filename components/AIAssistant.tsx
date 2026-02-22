@@ -7,7 +7,7 @@ const AIAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: 'Hello! I am your Softonicus Assistant. Looking for a specific software key or game recommendation?' }
+    { role: 'model', text: 'Hello! I am your Royal Assistant. Looking for a specific software key or game recommendation?' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);

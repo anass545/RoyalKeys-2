@@ -122,7 +122,7 @@ const App: React.FC = () => {
         <>
           {/* Standard User App Layout */}
           <div className="bg-amber-500 py-1.5 text-center text-[9px] font-black uppercase tracking-[0.4em] text-[#04051a] relative z-50">
-            Premium Global Keys • Instant Email Delivery • 24/7 Softonicus Support
+            Premium Global Keys • Instant Email Delivery • 24/7 RoyalKeys Support
           </div>
           <Navbar
             onCategoryClick={handleCategoryNav}
