@@ -8,7 +8,12 @@ interface LogoProps {
 const Logo: React.FC<LogoProps> = ({ className = "w-10 h-10", showText = false }) => {
     return (
         <div className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="Softonicus Logo" className={`${className} object-contain`} />
+            <img
+                src="/logo.jpg"
+                alt="Softonicus Logo"
+                className={`${className} object-contain`}
+                style={{ mixBlendMode: 'screen' }}
+            />
 
             {showText && (
                 <span
