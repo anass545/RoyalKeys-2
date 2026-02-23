@@ -13,6 +13,23 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
 
+  const sendEmailNotification = async (orderInfo: any) => {
+    try {
+      // Note: This uses EmailJS or a similar service logic. 
+      // You can replace this with your actual API endpoint or EmailJS service call.
+      console.log('Sending email notification to admin...', orderInfo);
+
+      // Example of a fetch call to a notification worker or service
+      // await fetch('https://your-api.com/notify', {
+      //   method: 'POST',
+      //   body: JSON.stringify(orderInfo)
+      // });
+
+    } catch (err) {
+      console.error('Failed to send email notification:', err);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -31,8 +48,15 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
 
       if (error) {
         console.error('Error recording order:', error);
-        // We still proceed with the UI success for now, but log the error
       }
+
+      // Send Email Notification to Admin
+      await sendEmailNotification({
+        product_title: product.title,
+        price: product.price,
+        customer_email: email,
+        dashboard_url: `${window.location.origin}/admin#sales`
+      });
 
       onSuccess();
     } catch (err) {

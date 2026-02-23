@@ -30,11 +30,35 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState(() => {
+        const hash = window.location.hash.replace('#', '');
+        return ['overview', 'products', 'inventory', 'sales', 'messages', 'settings'].includes(hash) ? hash : 'overview';
+    });
 
     useEffect(() => {
         fetchProducts();
         fetchOrders();
+
+        // Subscribe to real-time order updates
+        const channel = supabase
+            .channel('realtime-orders')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'orders',
+                },
+                (payload) => {
+                    console.log('New order received!', payload.new);
+                    setOrders(current => [payload.new, ...current]);
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const fetchProducts = async () => {
@@ -78,6 +102,29 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
         await fetchProducts();
         setLoading(false);
         alert('Migration complete!');
+    };
+
+    const clearAllData = async () => {
+        if (!confirm('CRITICAL WARNING: This will delete ALL orders and ALL products from the database. This action is IRREVERSIBLE. Are you absolutely sure?')) return;
+        setLoading(true);
+        try {
+            // Delete all orders
+            const { error: orderError } = await supabase.from('orders').delete().neq('id', '0');
+            if (orderError) throw orderError;
+
+            // Delete all products
+            const { error: productError } = await supabase.from('products').delete().neq('id', '0');
+            if (productError) throw productError;
+
+            setOrders([]);
+            setProducts([]);
+            alert('Dashboard reset complete! All data has been cleared.');
+        } catch (error) {
+            console.error('Error resetting dashboard:', error);
+            alert('Failed to reset dashboard. Check console for details.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const clearAllOrders = async () => {
@@ -448,9 +495,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                     </button>
                                 </div>
 
-                                <div className="flex justify-end gap-4 border-t border-white/5 pt-8">
-                                    <button className="px-6 py-3 text-gray-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors">Discard Changes</button>
-                                    <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">Save Global Settings</button>
+                                <div className="flex justify-between gap-4 border-t border-white/5 pt-8">
+                                    <button
+                                        onClick={clearAllData}
+                                        className="px-6 py-3 text-red-500 hover:text-red-400 text-xs font-bold uppercase tracking-widest transition-colors border border-red-500/20 rounded-xl hover:bg-red-500/5"
+                                    >
+                                        Factory Reset (Clear All Data)
+                                    </button>
+                                    <div className="flex gap-4">
+                                        <button className="px-6 py-3 text-gray-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors">Discard Changes</button>
+                                        <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">Save Global Settings</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
