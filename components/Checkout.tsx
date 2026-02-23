@@ -12,6 +12,7 @@ interface CheckoutProps {
 const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const sendEmailNotification = async (orderInfo: any) => {
     const adminEmails = ['mtcrs604@gmail.com', 'v0896980v@gmail.com'];
@@ -31,14 +32,15 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setLoading(true);
 
     try {
       const transactionId = `TR-${Math.random().toString(36).substring(7).toUpperCase()}`;
       const generatedKey = `${Math.random().toString(36).substring(2, 7).toUpperCase()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}-XXXX`;
 
-      // Record order in Supabase with FULL details
-      const { error } = await supabase.from('orders').insert({
+      // 1. Try a FULL insert first
+      let { error: insertError } = await supabase.from('orders').insert({
         product_id: product.id,
         product_title: product.title,
         product_image: product.image,
@@ -50,8 +52,23 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
         license_key: generatedKey
       });
 
-      if (error) {
-        console.error('Error recording order:', error);
+      // 2. If it fails (likely due to missing columns), try a minimal insert
+      if (insertError) {
+        console.warn('Full insert failed, falling back to minimal schema:', insertError);
+        const { error: fallbackError } = await supabase.from('orders').insert({
+          product_id: product.id,
+          product_title: product.title,
+          price: product.price,
+          customer_email: email,
+          status: 'completed',
+          payment_method: 'Stripe',
+          transaction_id: transactionId
+        });
+        insertError = fallbackError;
+      }
+
+      if (insertError) {
+        throw new Error(insertError.message || 'Database connection error');
       }
 
       // Send Email Notification to BOTH Admins
@@ -65,9 +82,9 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
       });
 
       onSuccess(generatedKey);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Submission error:', err);
-      onSuccess(`RK-${Math.random().toString(36).substring(2, 7).toUpperCase()}-AUTO`);
+      setError(err.message || 'An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -76,6 +93,13 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl animate-in fade-in zoom-in-95 duration-300">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+
+      {error && (
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-bold flex items-center gap-3">
+          <i className="fas fa-exclamation-circle text-lg"></i>
+          {error}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Left: Form */}
