@@ -17,7 +17,8 @@ import {
     Box,
     CheckCircle2,
     Clock,
-    Database
+    Database,
+    Trash2
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -27,11 +28,13 @@ interface AdminDashboardProps {
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     const [products, setProducts] = useState<Product[]>([]);
+    const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
 
     useEffect(() => {
         fetchProducts();
+        fetchOrders();
     }, []);
 
     const fetchProducts = async () => {
@@ -43,6 +46,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
             console.error('Error fetching products:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchOrders = async () => {
+        try {
+            const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
+            setOrders(data || []);
+        } catch (error) {
+            console.error('Error fetching orders:', error);
         }
     };
 
@@ -65,6 +78,37 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
         await fetchProducts();
         setLoading(false);
         alert('Migration complete!');
+    };
+
+    const clearAllOrders = async () => {
+        if (!confirm('Are you sure you want to clear ALL orders? This cannot be undone.')) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase.from('orders').delete().neq('id', '0'); // Delete everything
+            if (error) throw error;
+            setOrders([]);
+            alert('All orders cleared successfully.');
+        } catch (error) {
+            console.error('Error clearing orders:', error);
+            alert('Failed to clear orders.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteProduct = async (id: string) => {
+        if (!confirm('Delete this product?')) return;
+        setLoading(true);
+        try {
+            const { error } = await supabase.from('products').delete().eq('id', id);
+            if (error) throw error;
+            setProducts(products.filter(p => p.id !== id));
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            alert('Failed to delete product.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const StatCard = ({ title, value, subtext, icon: Icon, color }: any) => (
@@ -163,8 +207,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                     <>
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                            <StatCard title="Revenue" value="$23.03" subtext="+12% from last month" icon={DollarSign} color="blue" />
-                            <StatCard title="Orders" value="6" subtext="Avg. $3.84 / order" icon={ShoppingBag} color="purple" />
+                            <StatCard
+                                title="Revenue"
+                                value={`$${orders.reduce((sum, o) => sum + o.price, 0).toFixed(2)}`}
+                                subtext="+12% from last month"
+                                icon={DollarSign}
+                                color="blue"
+                            />
+                            <StatCard
+                                title="Orders"
+                                value={orders.length}
+                                subtext={`Avg. $${orders.length ? (orders.reduce((sum, o) => sum + o.price, 0) / orders.length).toFixed(2) : '0.00'} / order`}
+                                icon={ShoppingBag}
+                                color="purple"
+                            />
                             <StatCard title="Visits" value="254" subtext="Total page views" icon={Eye} color="pink" />
                             <StatCard title="Products" value={products.length} subtext={`${products.length} keys available`} icon={Box} color="orange" />
                         </div>
@@ -191,28 +247,32 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                 </div>
                             </div>
 
-                            {/* Recent Orders (Mock) */}
+                            {/* Recent Orders */}
                             <div className="lg:col-span-2 bg-[#1a1c35] rounded-2xl border border-white/5 p-6">
                                 <div className="flex items-center gap-2 mb-6 text-orange-500">
                                     <div className="p-1.5 bg-orange-500/10 rounded-lg"><Clock size={16} /></div>
                                     <h3 className="font-bold text-white text-sm">Recent Orders</h3>
                                 </div>
                                 <div className="space-y-3">
-                                    {[1, 2, 3, 4].map((i) => (
-                                        <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
-                                            <div className="p-2 bg-green-500/20 text-green-400 rounded-full">
-                                                <CheckCircle2 size={16} />
+                                    {orders.length === 0 ? (
+                                        <div className="text-center py-12 text-gray-500 text-sm">No orders found yet.</div>
+                                    ) : (
+                                        orders.slice(0, 5).map((order) => (
+                                            <div key={order.id} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                                                <div className="p-2 bg-green-500/20 text-green-400 rounded-full">
+                                                    <CheckCircle2 size={16} />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="text-white text-sm font-bold">{order.product_title}</div>
+                                                    <div className="text-gray-500 text-xs">{order.customer_email}</div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-white font-bold">${order.price.toFixed(2)}</div>
+                                                    <div className="text-gray-500 text-[10px]">{new Date(order.created_at).toLocaleDateString()}</div>
+                                                </div>
                                             </div>
-                                            <div className="flex-1">
-                                                <div className="text-white text-sm font-bold">Microsoft Windows 11 Professional</div>
-                                                <div className="text-gray-500 text-xs">{i % 2 === 0 ? 'v0896980v@gmail.com' : 'mtcrs604@gmail.com'}</div>
-                                            </div>
-                                            <div className="text-right">
-                                                <div className="text-white font-bold">$1.00</div>
-                                                <div className="text-gray-500 text-[10px]">1{i}/02/2026</div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -234,7 +294,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                     <h3 className="text-gray-200 font-bold text-sm leading-tight mb-4 line-clamp-2 h-10">{p.title}</h3>
                                     <div className="flex gap-2">
                                         <button className="flex-1 bg-white/5 hover:bg-blue-600 hover:text-white text-gray-400 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all">Edit</button>
-                                        <button className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white p-2 rounded-lg transition-all"><LogOut size={14} /></button>
+                                        <button
+                                            onClick={() => handleDeleteProduct(p.id)}
+                                            className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white p-2 rounded-lg transition-all"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -287,23 +352,37 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                             <StatCard title="Customers" value="482" subtext="New accounts today" icon={Users} color="pink" />
                         </div>
                         <div className="bg-[#1a1c35] rounded-2xl border border-white/5 p-6">
-                            <h3 className="font-bold text-white mb-6 uppercase tracking-widest text-xs">Recent Transactions</h3>
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="font-bold text-white uppercase tracking-widest text-xs">Recent Transactions</h3>
+                                {orders.length > 0 && (
+                                    <button
+                                        onClick={clearAllOrders}
+                                        className="text-red-400 hover:text-red-300 text-[10px] font-black uppercase tracking-wider border border-red-500/20 px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition-all"
+                                    >
+                                        Clear All Orders
+                                    </button>
+                                )}
+                            </div>
                             <div className="space-y-4">
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-[#04051a]/50 border border-white/5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">#O</div>
-                                            <div>
-                                                <div className="text-white text-sm font-bold">Order #7432{i}</div>
-                                                <div className="text-gray-500 text-[10px]">Processing • {i} min ago</div>
+                                {orders.length === 0 ? (
+                                    <div className="text-center py-12 text-gray-500 text-sm">No transactions found.</div>
+                                ) : (
+                                    orders.map((order) => (
+                                        <div key={order.id} className="flex items-center justify-between p-4 rounded-xl bg-[#04051a]/50 border border-white/5">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">#O</div>
+                                                <div>
+                                                    <div className="text-white text-sm font-bold">{order.product_title}</div>
+                                                    <div className="text-gray-500 text-[10px]">{order.status} • {new Date(order.created_at).toLocaleString()}</div>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-green-400 font-bold">${order.price.toFixed(2)}</div>
+                                                <div className="text-gray-500 text-[10px]">{order.payment_method} • ID: {order.transaction_id}</div>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <div className="text-green-400 font-bold">$24.99</div>
-                                            <div className="text-gray-500 text-[10px]">Stripe • ID: {Math.random().toString(36).substring(7).toUpperCase()}</div>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
