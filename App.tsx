@@ -119,12 +119,12 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleCheckoutSuccess = () => {
+  const handleCheckoutSuccess = (licenseKey: string) => {
     const newKey: LicenseKey = {
       id: `RK-${Date.now()}`,
       productId: selectedProduct?.id || 'gen',
       productName: selectedProduct?.title || 'Royal License',
-      key: `${Math.random().toString(36).substring(2, 7).toUpperCase()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}-XXXX`,
+      key: licenseKey,
       date: new Date().toLocaleDateString(),
       status: 'active'
     };
