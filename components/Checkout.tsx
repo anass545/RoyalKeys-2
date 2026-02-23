@@ -20,10 +20,25 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
     try {
       console.log(`Sending purchase notifications to: ${adminEmails.join(', ')}`, orderInfo);
 
-      // In a real implementation with EmailJS or similar:
-      // adminEmails.forEach(email => {
-      //   emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...orderInfo, admin_email: email }, PUBLIC_KEY);
-      // });
+      const publicKey = (import.meta.env as any).VITE_EMAILJS_PUBLIC_KEY;
+      if (!publicKey) {
+        console.warn('EmailJS Public Key not found. Please add VITE_EMAILJS_PUBLIC_KEY to your .env');
+        return;
+      }
+
+      await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id: 'service_default',
+          template_id: 'template_purchase',
+          user_id: publicKey,
+          template_params: {
+            ...orderInfo,
+            admin_emails: adminEmails.join(', ')
+          }
+        })
+      });
 
     } catch (err) {
       console.error('Failed to send email notifications:', err);

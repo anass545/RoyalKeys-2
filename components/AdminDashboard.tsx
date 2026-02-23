@@ -84,24 +84,81 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     };
 
     const handleMigration = async () => {
-        if (!confirm('Start migration?')) return;
+        if (!confirm('This will load all products from your website constants into the database. Proceed?')) return;
         setLoading(true);
-        for (const p of PRODUCTS) {
-            await supabase.from('products').upsert({
-                id: p.id,
-                title: p.title,
-                price: p.price,
-                category: p.category,
-                image: p.image,
-                old_price: p.oldPrice,
-                discount: p.discount,
-                badge: p.badge,
-                instant_delivery: p.instantDelivery,
-            });
+        let count = 0;
+        try {
+            for (const p of PRODUCTS) {
+                const { error } = await supabase.from('products').upsert({
+                    id: p.id,
+                    title: p.title,
+                    price: p.price,
+                    category: p.category,
+                    image: p.image,
+                    old_price: p.oldPrice,
+                    discount: p.discount,
+                    badge: p.badge,
+                    instant_delivery: p.instantDelivery,
+                });
+                if (!error) count++;
+            }
+            await fetchProducts();
+            alert(`Migration complete! Successfully synced ${count} products.`);
+        } catch (err) {
+            console.error('Migration error:', err);
+            alert('Sync failed. Did you run the SQL script I gave you?');
+        } finally {
+            setLoading(false);
         }
-        await fetchProducts();
-        setLoading(false);
-        alert('Migration complete!');
+    };
+
+    const testOrderNotification = async () => {
+        if (!confirm('This will send a test order notification to both mtcrs604@gmail.com and v0896980v@gmail.com. Proceed?')) return;
+        setLoading(true);
+        try {
+            // We'll use a fetch to simulate what Checkout does
+            const testOrder = {
+                product_title: 'TEST ORDER (System Check)',
+                price: 99.99,
+                customer_email: 'test@royalkeys.com',
+                transaction_id: `TEST-${Date.now()}`,
+                license_key: 'XXXX-XXXX-XXXX-XXXX',
+                dashboard_url: `${window.location.origin}/admin#sales`
+            };
+
+            // This mirrors the logic in Checkout.tsx
+            const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'NOT_SET';
+
+            if (publicKey === 'NOT_SET') {
+                alert('Test failed: VITE_EMAILJS_PUBLIC_KEY is not set in your .env file.');
+                return;
+            }
+
+            const data = {
+                service_id: 'service_default',
+                template_id: 'template_purchase',
+                user_id: publicKey,
+                template_params: testOrder
+            };
+
+            const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                alert('Test email sent successfully! Check both inboxes.');
+            } else {
+                const errText = await res.text();
+                throw new Error(errText);
+            }
+        } catch (err: any) {
+            console.error('Test notification failed:', err);
+            alert(`Test failed: ${err.message}. Please ensure you followed the EmailJS setup guide in the walkthrough.`);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const clearAllData = async () => {
@@ -509,8 +566,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                             </div>
                                         ))}
                                     </div>
-                                    <button className="mt-4 w-full bg-white text-[#04051a] py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all">
-                                        Register New Admin Access
+                                    <button
+                                        onClick={testOrderNotification}
+                                        className="mt-4 w-full bg-amber-500 text-[#04051a] py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-400 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <MessageSquare size={14} /> Send Test Order Notification
                                     </button>
                                 </div>
 
