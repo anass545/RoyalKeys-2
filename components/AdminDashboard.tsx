@@ -306,16 +306,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                     ) : (
                                         orders.slice(0, 5).map((order) => (
                                             <div key={order.id} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
-                                                <div className="p-2 bg-green-500/20 text-green-400 rounded-full">
-                                                    <CheckCircle2 size={16} />
+                                                <div className="relative">
+                                                    <img src={order.product_image || 'https://via.placeholder.com/40'} className="w-10 h-10 rounded-lg object-cover" alt="" />
+                                                    <div className="absolute -bottom-1 -right-1 bg-green-500 border-2 border-[#1a1c35] w-3 h-3 rounded-full"></div>
                                                 </div>
-                                                <div className="flex-1">
-                                                    <div className="text-white text-sm font-bold">{order.product_title}</div>
-                                                    <div className="text-gray-500 text-xs">{order.customer_email}</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-white text-sm font-bold truncate">{order.product_title}</div>
+                                                    <div className="text-gray-500 text-xs truncate">{order.customer_email}</div>
                                                 </div>
                                                 <div className="text-right">
                                                     <div className="text-white font-bold">${order.price.toFixed(2)}</div>
-                                                    <div className="text-gray-500 text-[10px]">{new Date(order.created_at).toLocaleDateString()}</div>
+                                                    <div className="text-gray-400 text-[9px] font-black uppercase tracking-widest">{order.license_key ? 'Key Issued' : 'Processing'}</div>
                                                 </div>
                                             </div>
                                         ))
@@ -415,17 +416,35 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                                     <div className="text-center py-12 text-gray-500 text-sm">No transactions found.</div>
                                 ) : (
                                     orders.map((order) => (
-                                        <div key={order.id} className="flex items-center justify-between p-4 rounded-xl bg-[#04051a]/50 border border-white/5">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">#O</div>
-                                                <div>
-                                                    <div className="text-white text-sm font-bold">{order.product_title}</div>
-                                                    <div className="text-gray-500 text-[10px]">{order.status} • {new Date(order.created_at).toLocaleString()}</div>
+                                        <div key={order.id} className="p-5 rounded-2xl bg-[#04051a]/50 border border-white/5 hover:border-blue-500/20 transition-all">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className="flex items-center gap-4">
+                                                    <img src={order.product_image || 'https://via.placeholder.com/40'} className="w-12 h-12 rounded-xl object-cover" alt="" />
+                                                    <div>
+                                                        <div className="text-white text-base font-bold">{order.product_title}</div>
+                                                        <div className="text-gray-500 text-xs font-medium">{order.customer_email}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-green-400 text-lg font-black">${order.price.toFixed(2)}</div>
+                                                    <div className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">{new Date(order.created_at).toLocaleString()}</div>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="text-green-400 font-bold">${order.price.toFixed(2)}</div>
-                                                <div className="text-gray-500 text-[10px]">{order.payment_method} • ID: {order.transaction_id}</div>
+
+                                            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5">
+                                                <div>
+                                                    <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">Transaction ID</p>
+                                                    <p className="text-white text-xs font-mono">{order.transaction_id}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">License Key Issued</p>
+                                                    <p className="text-blue-400 text-xs font-mono font-bold bg-blue-500/10 px-2 py-1 rounded inline-block">{order.license_key || 'GENERATING...'}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex justify-between items-center mt-4">
+                                                <span className="px-2 py-0.5 bg-green-500/10 text-green-400 text-[9px] font-black uppercase rounded border border-green-500/20">{order.status}</span>
+                                                <span className="text-gray-500 text-[9px] font-bold uppercase tracking-widest">Paid via {order.payment_method}</span>
                                             </div>
                                         </div>
                                     ))

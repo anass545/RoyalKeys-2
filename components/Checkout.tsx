@@ -14,19 +14,18 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
   const [email, setEmail] = useState('');
 
   const sendEmailNotification = async (orderInfo: any) => {
-    try {
-      // Note: This uses EmailJS or a similar service logic. 
-      // You can replace this with your actual API endpoint or EmailJS service call.
-      console.log('Sending email notification to admin...', orderInfo);
+    const adminEmails = ['mtcrs604@gmail.com', 'v0896980v@gmail.com'];
 
-      // Example of a fetch call to a notification worker or service
-      // await fetch('https://your-api.com/notify', {
-      //   method: 'POST',
-      //   body: JSON.stringify(orderInfo)
+    try {
+      console.log(`Sending purchase notifications to: ${adminEmails.join(', ')}`, orderInfo);
+
+      // In a real implementation with EmailJS or similar:
+      // adminEmails.forEach(email => {
+      //   emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...orderInfo, admin_email: email }, PUBLIC_KEY);
       // });
 
     } catch (err) {
-      console.error('Failed to send email notification:', err);
+      console.error('Failed to send email notifications:', err);
     }
   };
 
@@ -35,26 +34,33 @@ const Checkout: React.FC<CheckoutProps> = ({ product, onCancel, onSuccess }) => 
     setLoading(true);
 
     try {
-      // Record order in Supabase
+      const transactionId = `TR-${Math.random().toString(36).substring(7).toUpperCase()}`;
+      const generatedKey = `${Math.random().toString(36).substring(2, 7).toUpperCase()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}-XXXX`;
+
+      // Record order in Supabase with FULL details
       const { error } = await supabase.from('orders').insert({
         product_id: product.id,
         product_title: product.title,
+        product_image: product.image,
         price: product.price,
         customer_email: email,
         status: 'completed',
         payment_method: 'Stripe',
-        transaction_id: `TR-${Math.random().toString(36).substring(7).toUpperCase()}`
+        transaction_id: transactionId,
+        license_key: generatedKey
       });
 
       if (error) {
         console.error('Error recording order:', error);
       }
 
-      // Send Email Notification to Admin
+      // Send Email Notification to BOTH Admins
       await sendEmailNotification({
         product_title: product.title,
         price: product.price,
         customer_email: email,
+        transaction_id: transactionId,
+        license_key: generatedKey,
         dashboard_url: `${window.location.origin}/admin#sales`
       });
 
